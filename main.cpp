@@ -4,6 +4,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
+#include <unistd.h>
 
 /**
  * @author Ramazan Burak Saritas
@@ -20,6 +21,26 @@ int updateBalance(int amount, std::string companyName, std::map<std::string, int
         return 1;
     } else return -1;
 }
+
+/**
+ * Struct to pass the arguments to a machine id.
+*/
+struct machineArgs{
+    int amount;
+    std::string companyName;
+    std::map<std::string, int> &balances;
+};
+
+/**
+ * Void function for the vending machines to do the prepayment.
+*/
+void *doPrepayment(void *args){
+    machineArgs *currentArgs = (machineArgs*)args;
+    /* TODO: lock */
+    updateBalance(currentArgs->amount, currentArgs->companyName, currentArgs->balances);
+    /* TODO: unlock */
+}
+
 /**
  * Struct to keep track of the customers data.
 */
@@ -30,6 +51,17 @@ struct customer{
     std::string companyName; 
     int paymentAmount;
 };
+
+/**
+ * Void function for the customers to pick the vending machine.
+*/
+void *pickMachine(void *customerArgs){
+    customer *currentCustomer = (customer*)customerArgs;
+    // Sleeps for given time in milliseconds. (converts milli to micro.)
+    float sleepTimeMicroseconds = (currentCustomer -> sleepTime) * 1000;
+    usleep(sleepTimeMicroseconds);
+    /* TODO: call machine */
+}
 
 /**
  * Main driver program.
@@ -53,9 +85,11 @@ int main(int argc, char *argv[]){
     balances.insert(std::pair<std::string, int>("Otto", 0));
     balances.insert(std::pair<std::string, int>("Dave", 0));
     // Reads rest of the file for the customers data.
-    std::string customerLine;
     for (int id=1; id<numberOfCustomers+1; id++) {
+        // Reads the next line. 
+        std::string customerLine;
         std::getline(input, customerLine);
+        // Parses the line by commas and creates an instance of customer to keep data.
         std::stringstream lineStream(customerLine);
         std::string sleepTime, machineId, companyName, paymentAmount;
         std::getline(lineStream, sleepTime, ',');
@@ -63,6 +97,8 @@ int main(int argc, char *argv[]){
         std::getline(lineStream, companyName, ',');
         std::getline(lineStream, paymentAmount, ',');
         customer currentCustomer = {id, stoi(sleepTime), stoi(machineId), companyName, stoi(paymentAmount)};
+        pthread_t customerThread;
+
     }
 
 
