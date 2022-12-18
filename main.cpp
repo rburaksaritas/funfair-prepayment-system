@@ -11,6 +11,16 @@
 */
 
 /**
+ * Updates the balance of given company by the given amount.
+*/
+int updateBalance(int amount, std::string companyName, std::map<std::string, int> &balances){
+    std::map<std::string, int>::iterator iterator = balances.find(companyName);
+    if (iterator != balances.end()){
+        iterator->second += amount;
+        return 1;
+    } else return -1;
+}
+/**
  * Struct to keep track of the customers data.
 */
 struct customer{
