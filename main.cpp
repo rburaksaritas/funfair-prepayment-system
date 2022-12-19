@@ -11,6 +11,13 @@
  * 2020400321
 */
 
+// Pthread IDs for the vending machines.
+pthread_t m1, m2, m3, m4, m5, m6, m7, m8, m9, m10;
+// Mutex Lock IDs for vending machines and customers.
+pthread_mutex_t ml1, ml2, ml3, ml4, ml5 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t cl1, cl2, cl3, cl4, cl5, cl6, cl7, cl8, cl9, cl10 = PTHREAD_MUTEX_INITIALIZER;
+pthread_attr_t attr; // Default attributes for pthread.
+
 /**
  * Updates the balance of given company by the given amount.
 */
@@ -36,9 +43,16 @@ struct machineArgs{
 */
 void *doPrepayment(void *args){
     machineArgs *currentArgs = (machineArgs*)args;
-    /* TODO: lock */
+    std::string company = currentArgs->companyName;
+    pthread_mutex_t mutex;
+    if (company == "Kevin"){mutex = ml1;}
+    else if (company == "Bob"){mutex = ml2;}
+    else if (company == "Stuart"){mutex = ml3;}
+    else if (company == "Otto"){mutex = ml4;}
+    else if (company == "Dave"){mutex = ml5;}
+    pthread_mutex_lock(&mutex);
     updateBalance(currentArgs->amount, currentArgs->companyName, currentArgs->balances);
-    /* TODO: unlock */
+    pthread_mutex_unlock(&mutex);
 }
 
 /**
@@ -55,12 +69,54 @@ struct customer{
 /**
  * Void function for the customers to pick the vending machine.
 */
-void *pickMachine(void *customerArgs){
+void *pickMachine(void *customerArgs, std::map<std::string, int> &balances){
     customer *currentCustomer = (customer*)customerArgs;
     // Sleeps for given time in milliseconds. (converts milli to micro.)
     float sleepTimeMicroseconds = (currentCustomer -> sleepTime) * 1000;
     usleep(sleepTimeMicroseconds);
-    /* TODO: call machine */
+    int machine = currentCustomer->machineId;
+    machineArgs mArgs = {currentCustomer->paymentAmount, currentCustomer->companyName, balances};
+    if (machine == 1){
+        pthread_mutex_lock(&cl1);
+        pthread_create(&m1, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl1);
+    } else if (machine == 2){
+        pthread_mutex_lock(&cl2);
+        pthread_create(&m2, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl2);
+    } else if (machine == 3){
+        pthread_mutex_lock(&cl3);
+        pthread_create(&m3, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl3);
+    } else if (machine == 4){
+        pthread_mutex_lock(&cl4);
+        pthread_create(&m4, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl4);
+    } else if (machine == 5){
+        pthread_mutex_lock(&cl5);
+        pthread_create(&m5, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl5);
+    } else if (machine == 6){
+        pthread_mutex_lock(&cl6);
+        pthread_create(&m6, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl6);
+    } else if (machine == 7){
+        pthread_mutex_lock(&cl7);
+        pthread_create(&m7, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl7);
+    } else if (machine == 3){
+        pthread_mutex_lock(&cl8);
+        pthread_create(&m8, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl8);
+    } else if (machine == 9){
+        pthread_mutex_lock(&cl9);
+        pthread_create(&m9, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl9);
+    } else if (machine == 10){
+        pthread_mutex_lock(&cl10);
+        pthread_create(&m10, &attr, doPrepayment, &mArgs);
+        pthread_mutex_unlock(&cl10);
+    } 
 }
 
 /**
@@ -98,7 +154,7 @@ int main(int argc, char *argv[]){
         std::getline(lineStream, paymentAmount, ',');
         customer currentCustomer = {id, stoi(sleepTime), stoi(machineId), companyName, stoi(paymentAmount)};
         pthread_t customerThread;
-
+        pthread_attr_init(&attr);
     }
 
 
