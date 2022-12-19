@@ -43,16 +43,29 @@ struct machineArgs{
 */
 void *doPrepayment(void *args){
     machineArgs *currentArgs = (machineArgs*)args;
+    int amount = currentArgs->amount;
     std::string company = currentArgs->companyName;
-    pthread_mutex_t mutex;
-    if (company == "Kevin"){mutex = ml1;}
-    else if (company == "Bob"){mutex = ml2;}
-    else if (company == "Stuart"){mutex = ml3;}
-    else if (company == "Otto"){mutex = ml4;}
-    else if (company == "Dave"){mutex = ml5;}
-    pthread_mutex_lock(&mutex);
-    updateBalance(currentArgs->amount, currentArgs->companyName, currentArgs->balances);
-    pthread_mutex_unlock(&mutex);
+    if (company == "Kevin"){
+        pthread_mutex_lock(&ml1);
+        updateBalance(amount, company, currentArgs->balances);
+        pthread_mutex_unlock(&ml1);
+    } else if (company == "Bob"){
+        pthread_mutex_lock(&ml2);
+        updateBalance(amount, company, currentArgs->balances);
+        pthread_mutex_unlock(&ml2);
+    } else if (company == "Stuart"){
+        pthread_mutex_lock(&ml3);
+        updateBalance(amount, company, currentArgs->balances);
+        pthread_mutex_unlock(&ml3);
+    } else if (company == "Otto"){
+        pthread_mutex_lock(&ml4);
+        updateBalance(amount, company, currentArgs->balances);
+        pthread_mutex_unlock(&ml4);
+    } else if (company == "Dave"){
+        pthread_mutex_lock(&ml5);
+        updateBalance(amount, company, currentArgs->balances);
+        pthread_mutex_unlock(&ml5);
+    }
 }
 
 /**
