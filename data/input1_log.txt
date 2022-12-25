@@ -1,0 +1,20 @@
+Customer7,40TL,Dave
+Customer3,50TL,Stuart
+Customer8,300TL,Kevin
+Customer10,50TL,Stuart
+Customer9,231TL,Bob
+Customer2,231TL,Bob
+Customer1,300TL,Kevin
+Customer6,100TL,Bob
+Customer13,100TL,Bob
+Customer5,65TL,Stuart
+Customer4,30TL,Otto
+Customer11,30TL,Otto
+Customer12,65TL,Stuart
+Customer14,40TL,Dave
+All payments are completed
+Kevin: 600TL
+Bob: 662TL
+Stuart: 230TL
+Otto: 60TL
+Dave: 80TL
